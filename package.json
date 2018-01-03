@@ -1,0 +1,14 @@
+{
+    "name": "suitecrm",
+    "version": "0.0.1",
+    "description": "suitecrm test",
+    "keywords": [
+        "node-red"
+    ],
+    "node-red": {
+        "nodes": {
+            "suitecrm": "suitecrm/suitecrm.js"
+        }
+    },
+    "dependencies": {}
+}

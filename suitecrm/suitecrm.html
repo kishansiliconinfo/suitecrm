@@ -1,0 +1,79 @@
+<script type="text/javascript">
+    RED.nodes.registerType('suitecrm',{
+        category: 'suitecrm',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            model: {value:""},
+            mlinkfields: {value:""},
+            modulefields: {value:""}
+        },
+        inputs:1,
+        outputs:2,
+        icon: "file.png",
+        label: function() {
+            return this.name || this.model;
+        },
+        
+        oneditprepare: function() {
+            var that = this;
+            
+            $.getJSON('CRMModels', function(models) {
+                that.models = models;
+                //console.log(models);
+                for (var n in that.models.modules) {
+					$('#node-input-model').append('<option value="'+that.models.modules[n].module_key+'">'+that.models.modules[n].module_key+'</option>');
+                    $('#node-input-model').val(that.model);
+                }
+            });
+            
+            $('#node-input-model').change(function() {
+                var model = $('#node-input-model').val() || that.model;
+                
+                //console.log(model);
+                
+				$.getJSON('CRMModelsFields/'+ model, function(fields) {
+                    that.fields = fields;
+                    //console.log(fields);
+                    
+                    for (var n in fields.link_fields) {
+						$('#node-input-mlinkfields').append('<option value="'+that.fields.link_fields[n].name+'">'+that.fields.link_fields[n].name+'</option>');
+						$('#node-input-mlinkfields').val(that.mlinkfields);
+					}
+					
+					for (var n in fields.module_fields) {
+						$('#node-input-modulefields').append('<option value="'+that.fields.module_fields[n].name+'">'+that.fields.module_fields[n].name+'</option>');
+						$('#node-input-modulefields').val(that.modulefields);
+					}
+                });
+                
+                //~ $.getJSON('CRMModelsRelations/' + model, function(relations) {
+                    //~ console.log(relations);
+                //~ });
+            });
+		},
+    });
+</script>
+
+<script type="text/x-red" data-template-name="suitecrm">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-model"><i class="icon-tag"></i> Model</label>
+        <select type="text" id="node-input-model"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-mlinkfields"><i class="icon-tag"></i>Link fields</label>
+        <select type="text" id="node-input-mlinkfields"></select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-modulefields"><i class="icon-tag"></i>Module fields</label>
+        <select type="text" id="node-input-modulefields"></select>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="suitecrm">
+    <p>A simple node that converts the message payloads into all lower-case characters</p>
+</script>
