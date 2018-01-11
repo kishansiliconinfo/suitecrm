@@ -3,15 +3,18 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config);
         var node = this;
         
+        var globalContext = this.context().global;
+	    var app = globalContext.app;
+	    
         var sugar = require('node-sugarcrm-client');
         
         var model = config.model;
         
         sugar.init(
 			{
-				apiURL:  "http://localhost/SuiteCRM-7.9.8/service/v4_1/rest.php"
+				apiURL:  "http://exemple.rafagaming.com/service/v4_1/rest.php"
 			   ,login:   "admin"
-			   ,passwd:  "admin123"
+			   ,passwd:  "123456"
 			}
 		);
 		
@@ -145,8 +148,13 @@ module.exports = function(RED) {
 		});
     }
     RED.nodes.registerType("suitecrm",SuitecrmFind);
-    
+
     RED.httpAdmin.get("/getModelFields/:model", function(req,res) {
+        res.json(Object.keys(RED.settings.functionGlobalContext.app.models[req.params.model].attributes));
+    });
+    
+    RED.httpAdmin.get("/getModelRelational/:model", function(req,res) {
         res.json(Object.keys(RED.settings.functionGlobalContext.app.models[req.params.model].associations));
     });
+
 }
