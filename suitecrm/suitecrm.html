@@ -3,7 +3,9 @@
         category: 'suitecrm',
         color: '#a6bbcf',
         defaults: {
+            nname: {value:""},
             name: {value:""},
+            nmodel: {value:""},
             model: {value:""},
             mlinkfields: {value:""},
             modulefields: {value:""}
@@ -27,10 +29,24 @@
                 }
             });
             
+            $.getJSON('getModels', function(models) {
+                that.nmodels = models;
+                for (var n in that.nmodels) {
+                    $('#node-input-nmodel').append('<option value="'+that.nmodels[n]+'">'+that.nmodels[n]+'</option>');
+                    $('#node-input-nmodel').val(that.nmodels);
+                }
+            });
+            
+            $('#node-input-nmodel').change(function() {
+                console.log(that.nmodels);
+                
+            });
+            
+            
             $('#node-input-model').change(function() {
                 var model = $('#node-input-model').val() || that.model;
                 
-                //console.log(model);
+                console.log(that.model);
                 
 				$.getJSON('CRMModelsFields/'+ model, function(fields) {
                     that.fields = fields;
@@ -57,12 +73,19 @@
 
 <script type="text/x-red" data-template-name="suitecrm">
     <div class="form-row">
+        <label for="node-input-name"></label>
+        <label for="node-input-name" style="width:165px;"><i class="icon-tag"></i> Nodejs model</label>
+        <label for="node-input-name" style="width:165px;"><i class="icon-tag"></i> SuiteCRM Model</label>
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <input type="text" id="node-input-nname" placeholder="Nodejs model Name" style="width:165px;">
+        <input type="text" id="node-input-name" placeholder="SuiteCRM model Name" style="width:165px;">
     </div>
     <div class="form-row">
         <label for="node-input-model"><i class="icon-tag"></i> Model</label>
-        <select type="text" id="node-input-model"></select>
+        <select type="text" id="node-input-nmodel" style="width:165px"></select>
+        <select type="text" id="node-input-model" style="width:165px"></select>
     </div>
     <div class="form-row">
         <label for="node-input-mlinkfields"><i class="icon-tag"></i>Link fields</label>
