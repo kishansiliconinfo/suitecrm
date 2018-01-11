@@ -7,8 +7,10 @@
             name: {value:""},
             nmodel: {value:""},
             model: {value:""},
-            mlinkfields: {value:""},
-            modulefields: {value:""}
+            nmodulefields: {value:""},
+            modulefields: {value:""},
+            nmlinkfields: {value:""},
+            mlinkfields: {value:""}
         },
         inputs:1,
         outputs:2,
@@ -29,16 +31,31 @@
                 }
             });
             
+            // Nodejs models
+            
             $.getJSON('getModels', function(models) {
-                that.nmodels = models;
-                for (var n in that.nmodels) {
-                    $('#node-input-nmodel').append('<option value="'+that.nmodels[n]+'">'+that.nmodels[n]+'</option>');
-                    $('#node-input-nmodel').val(that.nmodels);
+                that.models = models;
+                for (var n in that.models) {
+                    $('#node-input-nmodel').append('<option value="'+that.models[n]+'">'+that.models[n]+'</option>');
+                    $('#node-input-nmodel').val(that.nmodel);
                 }
             });
             
+            
+            // Nodejs models
+            
             $('#node-input-nmodel').change(function() {
-                console.log(that.nmodels);
+                var nmodel = $('#node-input-nmodel').val() || that.nmodel;
+                
+                $.getJSON('getModelFields/'+ nmodel, function(fields) {
+                    that.fields = fields;
+                    console.log(fields);
+                    
+                    for (var n in that.fields) {
+						$('#node-input-nmodulefields').append('<option value="'+that.fields[n]+'">'+that.fields[n]+'</option>');
+						$('#node-input-nmodulefields').val(that.nmodulefields);
+					}
+                })
                 
             });
             
@@ -88,12 +105,14 @@
         <select type="text" id="node-input-model" style="width:165px"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-mlinkfields"><i class="icon-tag"></i>Link fields</label>
-        <select type="text" id="node-input-mlinkfields"></select>
+        <label for="node-input-modulefields"><i class="icon-tag"></i>Module fields</label>
+        <select type="text" id="node-input-nmodulefields" style="width:165px;"></select>
+        <select type="text" id="node-input-modulefields" style="width:165px;"></select>
     </div>
     <div class="form-row">
-        <label for="node-input-modulefields"><i class="icon-tag"></i>Module fields</label>
-        <select type="text" id="node-input-modulefields"></select>
+        <label for="node-input-mlinkfields"><i class="icon-tag"></i>Link fields</label>
+        <select type="text" id="node-input-nmlinkfields" style="width:165px;"></select>
+        <select type="text" id="node-input-mlinkfields" style="width:165px;"></select>
     </div>
 </script>
 
