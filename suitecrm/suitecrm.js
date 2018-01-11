@@ -145,4 +145,8 @@ module.exports = function(RED) {
 		});
     }
     RED.nodes.registerType("suitecrm",SuitecrmFind);
+    
+    RED.httpAdmin.get("/getModelFields/:model", function(req,res) {
+        res.json(Object.keys(RED.settings.functionGlobalContext.app.models[req.params.model].associations));
+    });
 }
